@@ -1,0 +1,16 @@
+# 依赖
+node_modules/
+
+# 环境变量（含密钥，绝对不能提交）
+.env
+
+# 本地工具与工作记录（不属于网站内容）
+.workbuddy/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+npm-debug.log*
