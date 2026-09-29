@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>史航菲 · 个人主页</title>
+<style>
+/* ==========================================================
+   主题配置区：想换颜色 / 字体，只改这里的变量即可
+   ========================================================== */
+:root {
+  --primary: #5b7cfa;        /* 主色（按钮、时间线圆点、强调文字） */
+  --primary-light: #8ba1ff;  /* 主色浅版（渐变用） */
+  --bg: #f6f8fc;             /* 页面背景色 */
+  --card-bg: #ffffff;        /* 卡片背景色 */
+  --text-main: #2b2f3a;      /* 主要文字颜色 */
+  --text-sub: #6b7280;       /* 次要文字颜色 */
+  --tag-bg: #eef2ff;         /* 兴趣标签背景色 */
+  --radius: 16px;            /* 卡片圆角大小 */
+  --shadow: 0 10px 30px rgba(91, 124, 250, .12);  /* 卡片阴影 */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+}
+
+/* ===================== 右上角天气卡片 ===================== */
+.weather-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: var(--card-bg);
+  border: 1px solid #e5e9f5;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.weather-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(91, 124, 250, .2);
+}
+
+/* 天气图标（emoji） */
+.weather-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.weather-city {
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: .5px;
+}
+
+.weather-temp {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.weather-desc {
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+/* 加载中 / 失败样式 */
+.weather-box.loading .weather-temp,
+.weather-box.loading .weather-desc,
+.weather-box.error .weather-temp {
+  color: var(--text-sub);
+  font-size: 13.5px;
+  font-weight: 400;
+}
+
+/* ===================== 第一屏：关于我 ===================== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px 40px;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(139, 161, 255, .18), transparent 50%),
+    radial-gradient(ellipse at 85% 85%, rgba(91, 124, 250, .14), transparent 50%),
+    var(--bg);
+}
+
+/* 圆形头像：修改 src 即可换成其他图片 */
+.avatar {
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #fff;
+  box-shadow: var(--shadow);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.nickname {
+  margin-top: 26px;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.intro {
+  margin-top: 10px;
+  font-size: 17px;
+  color: var(--text-sub);
+  max-width: 520px;
+}
+
+.section-title {
+  display: inline-block;
+  margin-top: 44px;
+  padding: 6px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--tag-bg);
+  border-radius: 999px;
+  letter-spacing: 1px;
+}
+
+/* 兴趣爱好标签 */
+.tags {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 560px;
+}
+
+.tag {
+  padding: 7px 18px;
+  font-size: 14px;
+  color: var(--text-main);
+  background: var(--card-bg);
+  border: 1px solid #e5e9f5;
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(91, 124, 250, .08);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.tag:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  color: var(--primary);
+}
+
+/* 学习目标卡片 */
+.goal-card {
+  margin-top: 20px;
+  padding: 22px 30px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 560px;
+  font-size: 15px;
+  color: var(--text-sub);
+  text-align: left;
+}
+
+.goal-card strong { color: var(--primary); }
+
+.goal-card li {
+  margin: 6px 0 6px 20px;
+}
+
+/* 向下滚动提示 */
+.scroll-hint {
+  margin-top: 46px;
+  font-size: 13px;
+  color: var(--text-sub);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.scroll-hint .arrow {
+  width: 22px;
+  height: 22px;
+  border-right: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  transform: rotate(45deg);
+  animation: bounce 1.6s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 1; }
+  50%      { transform: rotate(45deg) translate(6px, 6px); opacity: .4; }
+}
+
+/* ===================== 第二屏：学习记录 ===================== */
+.records {
+  min-height: 100vh;
+  padding: 80px 20px 100px;
+  background: var(--card-bg);
+}
+
+.records-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.records-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.records-sub {
+  text-align: center;
+  margin-top: 8px;
+  color: var(--text-sub);
+  font-size: 15px;
+}
+
+/* 时间线主体 */
+.timeline {
+  margin-top: 60px;
+  position: relative;
+  padding-left: 34px;      /* 移动端：线在左侧 */
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(var(--primary-light), var(--primary));
+  opacity: .35;
+}
+
+/* 单条记录：新增记录时复制整个 <li> 即可 */
+.timeline li {
+  list-style: none;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -34px;             /* 对齐左侧竖线 */
+  top: 8px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px rgba(91, 124, 250, .25);
+}
+
+.record-card {
+  background: var(--bg);
+  border: 1px solid #eef1f8;
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.record-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.record-date {
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.record-title {
+  margin-top: 4px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.record-desc {
+  margin-top: 8px;
+  font-size: 14.5px;
+  color: var(--text-sub);
+}
+
+/* ===================== 第三屏：一键去除图片背景 ===================== */
+.bgremove {
+  min-height: 100vh;
+  padding: 80px 20px 100px;
+  background: var(--bg);
+}
+
+.bgremove-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ---- 拖拽上传区 ---- */
+.dropzone {
+  margin-top: 44px;
+  padding: 46px 24px;
+  background: var(--card-bg);
+  border: 2px dashed #cdd8f2;
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .25s, background .25s, transform .25s;
+  box-shadow: 0 6px 20px rgba(91, 124, 250, .07);
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+  border-color: var(--primary);
+  background: var(--tag-bg);
+  transform: translateY(-2px);
+}
+
+.dropzone-icon {
+  font-size: 42px;
+  line-height: 1;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.dropzone-main {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.dropzone-main span { color: var(--primary); text-decoration: underline; }
+
+.dropzone-hint {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+/* 真正的文件输入框藏起来，用 label/dropzone 触发 */
+#fileInput { display: none; }
+
+/* ---- 操作按钮 ---- */
+.actions {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(91, 124, 250, .3);
+  transition: transform .2s, box-shadow .2s, opacity .2s;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(91, 124, 250, .38);
+}
+
+/* 禁用状态（处理中） */
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+  background: #c3cbe0;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-ghost {
+  background: var(--card-bg);
+  color: var(--text-sub);
+  border: 1px solid #e5e9f5;
+  box-shadow: 0 4px 12px rgba(91, 124, 250, .08);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ---- 处理中：旋转小圈 ---- */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 7px;
+  vertical-align: -2px;
+  border: 2px solid rgba(255, 255, 255, .45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- 提示消息 ---- */
+.message {
+  margin-top: 18px;
+  padding: 13px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  display: none;
+  text-align: center;
+}
+
+.message.show { display: block; }
+
+.message.error {
+  color: #b42318;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+}
+
+.message.success {
+  color: #067647;
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+}
+
+/* ---- 原图 / 结果 对比 ---- */
+.compare {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.compare-col {
+  background: var(--card-bg);
+  border: 1px solid #eef1f8;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(91, 124, 250, .08);
+}
+
+.compare-head {
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  background: var(--tag-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.compare-head .badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+/* 结果图用棋盘格背景，方便看清透明区域 */
+.compare-img-wrap {
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: #fafbfe;
+}
+
+.compare-img-wrap.transparent {
+  background-image:
+    linear-gradient(45deg, #e8ecf6 25%, transparent 25%),
+    linear-gradient(-45deg, #e8ecf6 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e8ecf6 75%),
+    linear-gradient(-45deg, transparent 75%, #e8ecf6 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+}
+
+.compare-img-wrap img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 8px;
+  display: block;
+}
+
+/* 空状态占位 */
+.placeholder {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  text-align: center;
+  padding: 30px 10px;
+}
+
+/* ---- 下载栏 ---- */
+.download-bar {
+  margin-top: 20px;
+  text-align: center;
+  display: none;
+}
+
+.download-bar.show { display: block; }
+
+/* ============================================================
+   第四屏：文字生成图片 —— 谷歌极简风格
+   设计要点：纯白底、超大留白、1px 细边框、无渐变无阴影、
+            圆角药丸按钮、Google 四色点缀、字体克制
+   ============================================================ */
+.genscreen {
+  /* 谷歌极简风独立配色，不跟随前面的紫蓝色变量 */
+  --g-blue:   #1a73e8;
+  --g-red:    #ea4335;
+  --g-yellow: #fbbc05;
+  --g-green:  #34a853;
+  --g-text:   #202124;
+  --g-sub:    #5f6368;
+  --g-line:   #dadce0;
+  --g-hover:  #f8f9fa;
+
+  min-height: 100vh;
+  padding: 90px 20px 110px;
+  background: #ffffff;
+  color: var(--g-text);
+  font-family: "Google Sans", "Product Sans", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.gen-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ---- 标题区：Google 四色 Logo 点 + 标题 ---- */
+.gen-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.gen-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.gen-dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: block;
+}
+
+.gen-dots i:nth-child(1) { background: var(--g-blue); }
+.gen-dots i:nth-child(2) { background: var(--g-red); }
+.gen-dots i:nth-child(3) { background: var(--g-yellow); }
+.gen-dots i:nth-child(4) { background: var(--g-green); }
+
+.gen-title {
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -.5px;
+  text-align: center;
+}
+
+.gen-title b { font-weight: 500; }
+
+.gen-subtitle {
+  text-align: center;
+  font-size: 15px;
+  color: var(--g-sub);
+  margin-bottom: 46px;
+  font-weight: 400;
+}
+
+/* ---- 输入区：1px 细边框，聚焦时变蓝 ---- */
+.gen-field {
+  position: relative;
+  margin-bottom: 26px;
+}
+
+.gen-input {
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--g-text);
+  background: #fff;
+  border: 1px solid var(--g-line);
+  border-radius: 8px;
+  outline: none;
+  resize: vertical;
+  min-height: 104px;
+  line-height: 1.6;
+  transition: border-color .18s, box-shadow .18s;
+}
+
+.gen-input::placeholder { color: #9aa0a6; }
+
+.gen-input:hover { border-color: #bdc1c6; }
+
+.gen-input:focus {
+  border-color: var(--g-blue);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, .12);
+}
+
+/* 字数统计 */
+.gen-count {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 12px;
+  color: #9aa0a6;
+  background: #fff;
+  padding: 0 5px;
+  pointer-events: none;
+}
+
+/* ---- 尺寸（比例）选择：下划线式极简 tab ---- */
+.gen-aspects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.aspect-chip {
+  padding: 8px 16px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--g-sub);
+  background: #fff;
+  border: 1px solid var(--g-line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .16s, border-color .16s, color .16s;
+}
+
+.aspect-chip:hover { background: var(--g-hover); }
+
+.aspect-chip.active {
+  color: var(--g-blue);
+  border-color: var(--g-blue);
+  background: #e8f0fe;
+  font-weight: 500;
+}
+
+/* ---- 主按钮：Google 经典蓝色药丸 ---- */
+.gen-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gen-btn {
+  padding: 12px 34px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #fff;
+  background: var(--g-blue);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: .2px;
+  transition: background .18s, box-shadow .18s;
+}
+
+.gen-btn:hover:not(:disabled) {
+  background: #1765cc;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .3), 0 4px 8px rgba(60, 64, 67, .15);
+}
+
+/* 处理中：灰色（符合"按钮变灰"要求） */
+.gen-btn:disabled {
+  background: #e8eaed;
+  color: #9aa0a6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 次级文字按钮 */
+.gen-btn-text {
+  padding: 12px 18px;
+  font-size: 14.5px;
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--g-blue);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .16s;
+}
+
+.gen-btn-text:hover { background: #e8f0fe; }
+
+/* 加载圈：Google 蓝 */
+.gen-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+  vertical-align: -2px;
+  border: 2px solid rgba(255, 255, 255, .5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: genspin .7s linear infinite;
+}
+
+@keyframes genspin { to { transform: rotate(360deg); } }
+
+/* ---- 状态提示条 ---- */
+.gen-notice {
+  margin-top: 22px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.65;
+  display: none;
+}
+
+.gen-notice.show { display: block; }
+
+.gen-notice.error {
+  color: #c5221f;
+  background: #fce8e6;
+  border: 1px solid #f6aea9;
+}
+
+.gen-notice.info {
+  color: #1967d2;
+  background: #e8f0fe;
+  border: 1px solid #c6dafc;
+}
+
+.gen-notice b { font-weight: 500; }
+
+/* 次要说明行（用于展示接口返回的 detail） */
+.gen-detail {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: #80868b;
+  word-break: break-word;
+}
+
+/* ---- 结果区 ---- */
+.gen-result {
+  margin-top: 40px;
+  display: none;
+}
+
+.gen-result.show { display: block; }
+
+.gen-result-frame {
+  padding: 20px;
+  background: var(--g-hover);
+  border: 1px solid var(--g-line);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+}
+
+.gen-result-frame img {
+  max-width: 100%;
+  max-height: 520px;
+  border-radius: 6px;
+  display: block;
+}
+
+/* 生成中的骨架屏 */
+.gen-skeleton {
+  text-align: center;
+  color: var(--g-sub);
+  font-size: 14px;
+}
+
+.gen-skeleton .bar {
+  width: 190px;
+  height: 4px;
+  margin: 0 auto 18px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #e8eaed;
+  position: relative;
+}
+
+.gen-skeleton .bar::after {
+  content: "";
+  position: absolute;
+  left: -40%;
+  top: 0;
+  width: 40%;
+  height: 100%;
+  background: var(--g-blue);
+  border-radius: 4px;
+  animation: genload 1.3s ease-in-out infinite;
+}
+
+@keyframes genload {
+  0%   { left: -40%; }
+  100% { left: 100%; }
+}
+
+.gen-result-meta {
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--g-sub);
+  text-align: center;
+}
+
+.gen-result-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gen-result-actions a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* 次级按钮：白底描边 */
+.gen-btn-outline {
+  padding: 11px 26px;
+  font-size: 14.5px;
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--g-blue);
+  background: #fff;
+  border: 1px solid var(--g-line);
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background .16s, border-color .16s;
+}
+
+.gen-btn-outline:hover {
+  background: var(--g-hover);
+  border-color: #bdc1c6;
+}
+
+/* ===================== 页脚 ===================== */
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 13px;
+  color: var(--text-sub);
+  background: var(--card-bg);
+}
+
+/* ===================== 手机端适配 ===================== */
+@media (max-width: 640px) {
+  .avatar { width: 132px; height: 132px; }
+  .nickname { font-size: 27px; }
+  .intro { font-size: 15px; }
+  .records-title { font-size: 24px; }
+  .record-card { padding: 18px 20px; }
+  .goal-card { padding: 18px 22px; }
+
+  /* 手机上天气卡片改为顶部通栏，避免遮挡头像 */
+  .weather-box {
+    position: static;
+    justify-content: center;
+    margin: 0 20px 4px;
+    padding: 9px 14px;
+  }
+  .weather-icon { font-size: 22px; }
+  .weather-temp { font-size: 17px; }
+
+  /* 第三屏：手机上对比图上下排列 */
+  .bgremove { padding: 60px 16px 70px; }
+  .compare { grid-template-columns: 1fr; gap: 16px; }
+  .dropzone { padding: 34px 18px; }
+  .dropzone-icon { font-size: 34px; }
+  .compare-img-wrap { min-height: 200px; }
+  .compare-img-wrap img { max-height: 240px; }
+  .btn { padding: 11px 24px; font-size: 14.5px; width: 100%; }
+  .actions { flex-direction: column; }
+
+  /* 第四屏：手机上收紧间距、按钮通栏 */
+  .genscreen { padding: 64px 18px 76px; }
+  .gen-title { font-size: 24px; }
+  .gen-subtitle { font-size: 14px; margin-bottom: 34px; }
+  .gen-input { padding: 15px 16px; font-size: 15px; min-height: 96px; }
+  .gen-actions { flex-direction: column; align-items: stretch; }
+  .gen-btn { width: 100%; padding: 13px 24px; }
+  .gen-btn-text { width: 100%; }
+  .gen-result-frame { padding: 12px; }
+  .gen-result-frame img { max-height: 340px; }
+  .gen-result-actions { flex-direction: column; }
+  .gen-btn-outline { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 右上角天气卡片（北京 · Open-Meteo，无需 API Key） ============ -->
+<div class="weather-box loading" id="weatherBox" title="数据来源：open-meteo.com">
+  <span class="weather-icon" id="wIcon">☁️</span>
+  <span class="weather-city" id="wCity">北京</span>
+  <span class="weather-temp" id="wTemp">--°</span>
+  <span class="weather-desc" id="wDesc">加载中…</span>
+</div>
+
+<!-- ============ 第一屏：关于我 ============ -->
+<section class="hero" id="about">
+
+  <!-- 头像：换图片时改 src 路径即可 -->
+  <img class="avatar" src="史航菲2寸.jpg" alt="我的头像">
+
+  <!-- 昵称 -->
+  <h1 class="nickname">史航菲</h1>
+
+  <!-- 一句话介绍 -->
+  <p class="intro">一名热爱探索的前端学习者，正在用代码记录成长的每一步。</p>
+
+  <!-- 兴趣爱好：增删 <span class="tag"> 即可 -->
+  <span class="section-title">兴趣爱好</span>
+  <div class="tags">
+    <span class="tag">编程</span>
+    <span class="tag">阅读</span>
+    <span class="tag">旅行</span>
+    <span class="tag">音乐</span>
+    <span class="tag">摄影</span>
+  </div>
+
+  <!-- 学习目标：按需修改列表内容 -->
+  <span class="section-title">学习目标</span>
+  <div class="goal-card">
+    <ul>
+      <li>掌握 <strong>HTML / CSS / JavaScript</strong> 前端三件套</li>
+      <li>熟练运用 <strong>Python 爬虫</strong> 获取和处理数据</li>
+      <li>做出一个完整上线的 <strong>个人项目</strong></li>
+    </ul>
+  </div>
+
+  <a class="scroll-hint" href="#records">
+    往下看我的学习记录
+    <span class="arrow"></span>
+  </a>
+</section>
+
+<!-- ============ 第二屏：我的学习记录 ============ -->
+<section class="records" id="records">
+  <div class="records-inner">
+    <h2 class="records-title">我的学习记录</h2>
+    <p class="records-sub">每一步，都算数</p>
+
+    <ul class="timeline">
+      <!--
+        ✎ 新增学习记录的方法：
+        复制下面任意一个 <li> ... </li> 块，粘贴到列表最前面，
+        修改日期、标题和描述文字即可。越靠前显示越靠上。
+      -->
+
+      <!-- 学习记录 5 -->
+      <li>
+        <div class="record-card">
+          <div class="record-date">2026 · 第一次对接大模型出图</div>
+          <h3 class="record-title">文字生成图片</h3>
+          <p class="record-desc">用 OpenRouter 的 OpenAI 兼容接口接上了 gpt-5.4-image-2 模型，实现「输入文字出图片」。学会了把密钥放进环境变量、处理 base64 图片数据、设置长超时，也第一次遇到 API 的地理限制——原来接口报错本身也是要读懂的信息。</p>
+        </div>
+      </li>
+
+      <!-- 学习记录 4 -->
+      <li>
+        <div class="record-card">
+          <div class="record-date">2026 · 第一个全栈功能</div>
+          <h3 class="record-title">一键去除图片背景</h3>
+          <p class="record-desc">第一次写后端：用 Node.js + Express 搭了一个接口，把图片上传给 Replicate 上的 remove-bg 模型，再把抠好的图返回给页面。学会了前后端分工、文件上传、环境变量保护密钥，也第一次用上了拖拽上传和结果下载。</p>
+        </div>
+      </li>
+
+      <!-- 学习记录 3 -->
+      <li>
+        <div class="record-card">
+          <div class="record-date">2026 · 第一次 API 调用</div>
+          <h3 class="record-title">第一次 API 调用</h3>
+          <p class="record-desc">第一次调用网络 API：用 fetch 请求 Open-Meteo 的天气接口，拿到了北京的实时气温和天气状况。不需要 API Key 就能获取真实数据，感觉打开了一扇新的大门。</p>
+        </div>
+      </li>
+
+      <!-- 学习记录 2 -->
+      <li>
+        <div class="record-card">
+          <div class="record-date">2026 · 第一个个人网页</div>
+          <h3 class="record-title">我的个人主页</h3>
+          <p class="record-desc">亲手写下了人生第一个网页——就是你现在看到的这一页。学会了 HTML 结构、CSS 样式和时间线布局，还做了手机端适配。</p>
+        </div>
+      </li>
+
+      <!-- 学习记录 1 -->
+      <li>
+        <div class="record-card">
+          <div class="record-date">起点 · 第一个功能</div>
+          <h3 class="record-title">爬虫抓取</h3>
+          <p class="record-desc">完成了第一个功能：用 Python 编写爬虫，从网页上自动抓取数据。第一次体会到"代码替我干活"的成就感。</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 第三屏：一键去除图片背景 ============ -->
+<section class="bgremove" id="bgremove">
+  <div class="bgremove-inner">
+    <h2 class="records-title">一键去除图片背景</h2>
+    <p class="records-sub">上传一张图片，AI 自动帮你去掉背景 · 由 Replicate 驱动</p>
+
+    <!-- 拖拽 / 点击上传区 -->
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp">
+      <span class="dropzone-icon">🖼️</span>
+      <div class="dropzone-main">把图片拖到这里，或 <span>点击选择图片</span></div>
+      <div class="dropzone-hint">支持 JPG / PNG / WebP，大小 10MB 以内</div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="actions">
+      <button class="btn" id="removeBtn" disabled>去除背景</button>
+      <button class="btn btn-ghost" id="resetBtn" style="display:none">重新选择</button>
+    </div>
+
+    <!-- 提示消息 -->
+    <div class="message" id="message"></div>
+
+    <!-- 原图 / 结果 对比 -->
+    <div class="compare">
+      <!-- 左侧：原图 -->
+      <div class="compare-col">
+        <div class="compare-head">
+          <span>原图</span>
+          <span class="badge" id="origSize"></span>
+        </div>
+        <div class="compare-img-wrap" id="origWrap">
+          <div class="placeholder">尚未选择图片</div>
+        </div>
+      </div>
+
+      <!-- 右侧：结果 -->
+      <div class="compare-col">
+        <div class="compare-head">
+          <span>去除背景后</span>
+          <span class="badge">PNG 透明</span>
+        </div>
+        <div class="compare-img-wrap transparent" id="resultWrap">
+          <div class="placeholder">结果将显示在这里</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 下载 -->
+    <div class="download-bar" id="downloadBar">
+      <a class="btn" id="downloadBtn" download="removed-bg.png" href="#">下载结果图片</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 第四屏：文字生成图片（谷歌极简风） ============ -->
+<section class="genscreen" id="genscreen">
+  <div class="gen-inner">
+
+    <!-- 标题 -->
+    <div class="gen-brand">
+      <span class="gen-dots"><i></i><i></i><i></i><i></i></span>
+    </div>
+    <h2 class="gen-title">用文字<b>生成图片</b></h2>
+    <p class="gen-subtitle">描述你想要的画面，AI 帮你画出来</p>
+
+    <!-- 提示词输入 -->
+    <div class="gen-field">
+      <textarea
+        class="gen-input"
+        id="genPrompt"
+        maxlength="2000"
+        placeholder="例如：一只戴着宇航头盔的橘猫漂浮在星空里，背景是柔和的紫色星云，写实风格"
+      ></textarea>
+      <span class="gen-count" id="genCount">0 / 2000</span>
+    </div>
+
+    <!-- 画面比例 -->
+    <div class="gen-aspects" id="genAspects">
+      <button class="aspect-chip active" data-aspect="1:1">正方形 1:1</button>
+      <button class="aspect-chip" data-aspect="16:9">宽屏 16:9</button>
+      <button class="aspect-chip" data-aspect="9:16">竖屏 9:16</button>
+      <button class="aspect-chip" data-aspect="4:3">横版 4:3</button>
+    </div>
+
+    <!-- 操作 -->
+    <div class="gen-actions">
+      <button class="gen-btn" id="genBtn" disabled>生成图片</button>
+      <button class="gen-btn-text" id="genClearBtn">清空</button>
+    </div>
+
+    <!-- 错误 / 提示 -->
+    <div class="gen-notice" id="genNotice"></div>
+
+    <!-- 结果 -->
+    <div class="gen-result" id="genResult">
+      <div class="gen-result-frame" id="genFrame">
+        <div class="gen-skeleton">
+          <div class="bar"></div>
+          <div>AI 正在作画，可能需要 30～90 秒…</div>
+        </div>
+      </div>
+      <div class="gen-result-meta" id="genMeta"></div>
+      <div class="gen-result-actions" id="genActions" style="display:none">
+        <a class="gen-btn-outline" id="genDownload" download="ai-image.png" href="#">下载图片</a>
+        <button class="gen-btn-outline" id="genAgainBtn">再生成一张</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>© 2026 史航菲 · 用热爱持续学习</footer>
+
+<!-- ============ 天气脚本：Open-Meteo 免费接口，无需 API Key ============ -->
+<script>
+/* 想换城市：改这里的经纬度即可
+   北京 39.9042, 116.4074 | 上海 31.2304, 121.4737 | 广州 23.1291, 113.2644 */
+const WEATHER_LOCATION = { name: "北京", latitude: 39.9042, longitude: 116.4074 };
+
+/* WMO 天气代码 → 中文描述 + 表情图标 */
+const WMO = {
+  0:  ["晴", "☀️"],
+  1:  ["晴间多云", "🌤️"], 2: ["多云", "⛅"], 3: ["阴", "☁️"],
+  45: ["有雾", "🌫️"], 48: ["雾凇", "🌫️"],
+  51: ["毛毛雨", "🌦️"], 53: ["小雨", "🌦️"], 55: ["中雨", "🌦️"],
+  56: ["冻毛毛雨", "🌧️"], 57: ["冻雨", "🌧️"],
+  61: ["小雨", "🌧️"], 63: ["中雨", "🌧️"], 65: ["大雨", "🌧️"],
+  66: ["冻雨", "🌧️"], 67: ["强冻雨", "🌧️"],
+  71: ["小雪", "🌨️"], 73: ["中雪", "🌨️"], 75: ["大雪", "❄️"], 77: ["雪粒", "🌨️"],
+  80: ["阵雨", "🌦️"], 81: ["强阵雨", "🌧️"], 82: ["暴雨", "⛈️"],
+  85: ["阵雪", "🌨️"], 86: ["强阵雪", "❄️"],
+  95: ["雷阵雨", "⛈️"], 96: ["雷阵雨伴冰雹", "⛈️"], 99: ["强雷暴冰雹", "⛈️"]
+};
+
+async function loadWeather() {
+  const box   = document.getElementById("weatherBox");
+  const elIcon = document.getElementById("wIcon");
+  const elCity = document.getElementById("wCity");
+  const elTemp = document.getElementById("wTemp");
+  const elDesc = document.getElementById("wDesc");
+
+  elCity.textContent = WEATHER_LOCATION.name;
+
+  const url = "https://api.open-meteo.com/v1/forecast"
+            + "?latitude="  + WEATHER_LOCATION.latitude
+            + "&longitude=" + WEATHER_LOCATION.longitude
+            + "&current=temperature_2m,weather_code"
+            + "&timezone=Asia%2FShanghai";
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+
+    const temp = Math.round(data.current.temperature_2m);
+    const code = data.current.weather_code;
+    const info = WMO[code] || ["未知", "🌡️"];
+
+    elIcon.textContent = info[1];
+    elTemp.textContent = temp + "°C";
+    elDesc.textContent = info[0];
+    box.classList.remove("loading", "error");
+  } catch (err) {
+    elIcon.textContent = "📡";
+    elTemp.textContent = "";
+    elDesc.textContent = "天气获取失败";
+    box.classList.remove("loading");
+    box.classList.add("error");
+    console.error("天气接口请求失败：", err);
+  }
+}
+
+loadWeather();
+/* 每 10 分钟自动刷新一次 */
+setInterval(loadWeather, 10 * 60 * 1000);
+</script>
+
+<!-- ============ 抠图脚本：上传 → 调用后端 → 对比显示 → 下载 ============ -->
+<script>
+(function () {
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB，与后端限制保持一致
+
+  const dropzone   = document.getElementById("dropzone");
+  const fileInput  = document.getElementById("fileInput");
+  const removeBtn  = document.getElementById("removeBtn");
+  const resetBtn   = document.getElementById("resetBtn");
+  const message    = document.getElementById("message");
+  const origWrap   = document.getElementById("origWrap");
+  const resultWrap = document.getElementById("resultWrap");
+  const origSize   = document.getElementById("origSize");
+  const downloadBar = document.getElementById("downloadBar");
+  const downloadBtn = document.getElementById("downloadBtn");
+
+  let selectedFile = null;
+
+  /* ---------- 工具函数 ---------- */
+  function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message show " + (type || "error");
+  }
+
+  function hideMessage() {
+    message.className = "message";
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / 1024 / 1024).toFixed(2) + " MB";
+  }
+
+  /* ---------- 选择图片 ---------- */
+  function handleFile(file) {
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showMessage("请选择图片文件（JPG / PNG / WebP）。");
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      showMessage("图片太大了（" + formatSize(file.size) + "），请上传 10MB 以内的图片。");
+      return;
+    }
+
+    selectedFile = file;
+    hideMessage();
+
+    // 左侧显示原图
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      origWrap.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.alt = "原图预览";
+      origWrap.appendChild(img);
+      origSize.textContent = formatSize(file.size);
+    };
+    reader.readAsDataURL(file);
+
+    // 右侧恢复为等待状态
+    resultWrap.innerHTML = '<div class="placeholder">点击「去除背景」开始处理</div>';
+    downloadBar.classList.remove("show");
+
+    // 按钮状态
+    removeBtn.disabled = false;
+    removeBtn.textContent = "去除背景";
+    resetBtn.style.display = "inline-block";
+  }
+
+  /* ---------- 点击 / 拖拽 事件 ---------- */
+  dropzone.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", (e) => {
+    handleFile(e.target.files[0]);
+    fileInput.value = ""; // 允许重复选择同一个文件
+  });
+
+  ["dragenter", "dragover"].forEach((evt) => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+  });
+
+  ["dragleave", "drop"].forEach((evt) => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+    });
+  });
+
+  dropzone.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    handleFile(file);
+  });
+
+  /* ---------- 去除背景 ---------- */
+  removeBtn.addEventListener("click", async () => {
+    if (!selectedFile) {
+      showMessage("请先选择一张图片。");
+      return;
+    }
+
+    // 1. 按钮变灰显示「处理中…」
+    removeBtn.disabled = true;
+    resetBtn.disabled = true;
+    removeBtn.innerHTML = '<span class="spinner"></span>处理中…';
+    hideMessage();
+    resultWrap.innerHTML = '<div class="placeholder">AI 正在努力抠图，请稍候…</div>';
+
+    try {
+      // 2. 组装表单数据发给后端（Key 保存在服务端，前端不接触）
+      const formData = new FormData();
+      formData.append("image", selectedFile);
+
+      const res = await fetch("/api/remove-bg", {
+        method: "POST",
+        body: formData,
+      });
+
+      // 3. 解析响应
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        /* 非 JSON 响应，按通用错误处理 */
+      }
+
+      if (!res.ok) {
+        throw new Error((data && data.error) || "请求失败（HTTP " + res.status + "）。");
+      }
+      if (!data || !data.image) {
+        throw new Error("服务端没有返回图片结果，请重试。");
+      }
+
+      // 4. 显示结果
+      resultWrap.innerHTML = "";
+      const resultImg = document.createElement("img");
+      resultImg.src = data.image;
+      resultImg.alt = "去除背景后的图片";
+      resultImg.onload = () => {
+        downloadBar.classList.add("show");
+      };
+      resultImg.onerror = () => {
+        showMessage("结果图片加载失败，可能是链接已过期，请重新处理一次。");
+      };
+      resultWrap.appendChild(resultImg);
+
+      downloadBtn.href = data.image;
+
+      showMessage("处理完成！可以点击下方按钮下载结果。", "success");
+    } catch (err) {
+      console.error("抠图失败：", err);
+      resultWrap.innerHTML = '<div class="placeholder">处理失败，请重试</div>';
+      showMessage("处理失败：" + err.message);
+    } finally {
+      // 5. 恢复按钮（无论成功失败）
+      removeBtn.disabled = false;
+      resetBtn.disabled = false;
+      removeBtn.textContent = "去除背景";
+    }
+  });
+
+  /* ---------- 重新选择 ---------- */
+  resetBtn.addEventListener("click", () => {
+    selectedFile = null;
+    origWrap.innerHTML = '<div class="placeholder">尚未选择图片</div>';
+    resultWrap.innerHTML = '<div class="placeholder">结果将显示在这里</div>';
+    origSize.textContent = "";
+    downloadBar.classList.remove("show");
+    removeBtn.disabled = true;
+    removeBtn.textContent = "去除背景";
+    resetBtn.style.display = "none";
+    hideMessage();
+  });
+})();
+</script>
+
+<!-- ============ 文生图脚本：提示词 → 调用后端 → 展示 → 下载 ============ -->
+<script>
+(function () {
+  const promptEl   = document.getElementById("genPrompt");
+  const countEl    = document.getElementById("genCount");
+  const aspectsEl  = document.getElementById("genAspects");
+  const genBtn     = document.getElementById("genBtn");
+  const clearBtn   = document.getElementById("genClearBtn");
+  const noticeEl   = document.getElementById("genNotice");
+  const resultEl   = document.getElementById("genResult");
+  const frameEl    = document.getElementById("genFrame");
+  const metaEl     = document.getElementById("genMeta");
+  const actionsEl  = document.getElementById("genActions");
+  const downloadEl = document.getElementById("genDownload");
+  const againBtn   = document.getElementById("genAgainBtn");
+
+  let aspect = "1:1";
+  let busy = false;
+
+  /* ---------- 提示 ---------- */
+  function notice(text, type, detail) {
+    noticeEl.innerHTML =
+      text + (detail ? '<span class="gen-detail">' + detail + "</span>" : "");
+    noticeEl.className = "gen-notice show " + (type || "error");
+  }
+  function clearNotice() {
+    noticeEl.className = "gen-notice";
+  }
+
+  /* ---------- 字数统计 + 按钮可用性 ---------- */
+  function sync() {
+    const len = promptEl.value.length;
+    countEl.textContent = len + " / 2000";
+    genBtn.disabled = busy || len === 0;
+  }
+
+  promptEl.addEventListener("input", sync);
+
+  // Ctrl / Cmd + Enter 快捷生成
+  promptEl.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && !genBtn.disabled) {
+      e.preventDefault();
+      genBtn.click();
+    }
+  });
+
+  /* ---------- 比例切换 ---------- */
+  aspectsEl.addEventListener("click", (e) => {
+    const chip = e.target.closest(".aspect-chip");
+    if (!chip || busy) return;
+    aspectsEl.querySelectorAll(".aspect-chip").forEach((c) => c.classList.remove("active"));
+    chip.classList.add("active");
+    aspect = chip.dataset.aspect;
+  });
+
+  /* ---------- 示例提示词（首次进入时的占位引导） ---------- */
+  const SAMPLES = [
+    "一只戴着宇航头盔的橘猫漂浮在星空里，背景是柔和的紫色星云，写实风格",
+    "水墨风格的江南水乡清晨，小桥流水，远处有淡淡薄雾",
+    "极简风格的咖啡杯静物摄影，米色背景，柔和侧光",
+    "赛博朋克城市夜景，霓虹灯倒映在湿漉漉的街道上"
+  ];
+  promptEl.placeholder = SAMPLES[Math.floor(Math.random() * SAMPLES.length)];
+
+  /* ---------- 生成 ---------- */
+  async function generate() {
+    const prompt = promptEl.value.trim();
+    if (!prompt || busy) return;
+
+    busy = true;
+    sync();
+    clearNotice();
+
+    // 按钮变灰显示「处理中…」
+    genBtn.innerHTML = '<span class="gen-spinner"></span>处理中…';
+
+    // 结果区进入加载态
+    resultEl.classList.add("show");
+    actionsEl.style.display = "none";
+    metaEl.textContent = "";
+    frameEl.innerHTML =
+      '<div class="gen-skeleton"><div class="bar"></div>' +
+      "<div>AI 正在作画，可能需要 30～90 秒…</div></div>";
+
+    try {
+      const res = await fetch("/api/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: prompt, aspect: aspect }),
+      });
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        /* 非 JSON */
+      }
+
+      if (!res.ok) {
+        const e = new Error(
+          (data && data.error) || "生成失败（HTTP " + res.status + "）。"
+        );
+        e.detail = (data && data.detail) || "";
+        throw e;
+      }
+      if (!data || !data.image) {
+        throw new Error("服务端没有返回图片，请重试。");
+      }
+
+      // 展示图片
+      frameEl.innerHTML = "";
+      const img = document.createElement("img");
+      img.alt = prompt;
+      img.src = data.image;
+      img.onload = () => {
+        actionsEl.style.display = "flex";
+        // 下载文件名：用时间戳避免覆盖
+        downloadEl.download = "ai-" + Date.now() + ".png";
+        downloadEl.href = data.image;
+      };
+      img.onerror = () => {
+        frameEl.innerHTML = '<div class="gen-skeleton"><div>图片加载失败，请重试</div></div>';
+        notice("图片加载失败，请重新生成一次。");
+      };
+      frameEl.appendChild(img);
+
+      metaEl.textContent = "模型：" + (data.model || "未知") + " · 比例 " + aspect;
+      notice("生成完成，可点击下方「下载图片」保存。", "info");
+    } catch (err) {
+      frameEl.innerHTML =
+        '<div class="gen-skeleton"><div>生成失败</div></div>';
+      notice(err.message, "error", err.detail || "");
+      console.error("文生图失败：", err);
+    } finally {
+      busy = false;
+      genBtn.textContent = "生成图片";
+      sync();
+    }
+  }
+
+  genBtn.addEventListener("click", generate);
+  againBtn.addEventListener("click", generate);
+
+  /* ---------- 清空 ---------- */
+  clearBtn.addEventListener("click", () => {
+    if (busy) return;
+    promptEl.value = "";
+    resultEl.classList.remove("show");
+    frameEl.innerHTML = "";
+    actionsEl.style.display = "none";
+    metaEl.textContent = "";
+    clearNotice();
+    sync();
+    promptEl.focus();
+  });
+
+  sync();
+})();
+</script>
+
+</body>
+</html>
